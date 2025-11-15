@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
-import { Button } from './ui/button'
+import { Card, Button } from 'antd'
 import { PokemonDetailModal } from './PokemonDetailModal'
 import type { PokemonListItem } from '@/types/pokemon'
 
@@ -16,16 +15,15 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
 
   return (
     <>
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle className="capitalize">{pokemon.name}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-gray-500">ID: {pokemonId}</p>
-        </CardContent>
-        <CardFooter>
-          <Button onClick={() => setIsModalOpen(true)}>View</Button>
-        </CardFooter>
+      <Card
+        title={<span style={{ textTransform: 'capitalize' }}>{pokemon.name}</span>}
+        actions={[
+          <Button key="view" type="primary" onClick={() => setIsModalOpen(true)}>
+            View
+          </Button>
+        ]}
+      >
+        <p style={{ fontSize: '14px', color: 'rgba(0, 0, 0, 0.45)' }}>ID: {pokemonId}</p>
       </Card>
       
       <PokemonDetailModal

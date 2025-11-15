@@ -1,11 +1,5 @@
 import { useEffect, useState } from 'react'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from './ui/dialog'
+import { Modal, Spin, Alert, Tag, Space, Descriptions } from 'antd'
 import type { PokemonDetail } from '@/types/pokemon'
 
 interface PokemonDetailModalProps {
@@ -50,78 +44,72 @@ export function PokemonDetailModal({ pokemonId, isOpen, onClose }: PokemonDetail
   }, [pokemonId, isOpen])
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="capitalize">
-            {pokemon?.name || 'Loading...'}
-          </DialogTitle>
-          <DialogDescription>Pokemon Details</DialogDescription>
-        </DialogHeader>
-        
-        {loading && <div className="py-4 text-center">Loading...</div>}
-        
-        {error && (
-          <div className="py-4 text-center text-red-500">Error: {error}</div>
-        )}
-        
-        {pokemon && !loading && (
-          <div className="space-y-4">
-            <div className="flex justify-center">
-              <img
-                src={pokemon.sprites.front_default}
-                alt={pokemon.name}
-                className="w-32 h-32"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="font-semibold">ID:</span>
-                <span>{pokemon.id}</span>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="font-semibold">Height:</span>
-                <span>{pokemon.height}</span>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="font-semibold">Weight:</span>
-                <span>{pokemon.weight}</span>
-              </div>
-              
-              <div>
-                <span className="font-semibold">Types:</span>
-                <div className="flex gap-2 mt-1">
-                  {pokemon.types.map((type) => (
-                    <span
-                      key={type.slot}
-                      className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm capitalize"
-                    >
-                      {type.type.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              
-              <div>
-                <span className="font-semibold">Abilities:</span>
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {pokemon.abilities.map((ability, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm capitalize"
-                    >
-                      {ability.ability.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
+    <Modal
+      title={
+        <span style={{ textTransform: 'capitalize' }}>
+          {pokemon?.name || 'Loading...'}
+        </span>
+      }
+      open={isOpen}
+      onCancel={onClose}
+      footer={null}
+    >
+      {loading && (
+        <div style={{ textAlign: 'center', padding: '16px 0' }}>
+          <Spin />
+          <div style={{ marginTop: 8 }}>Loading...</div>
+        </div>
+      )}
+      
+      {error && (
+        <Alert
+          message="Error"
+          description={error}
+          type="error"
+          showIcon
+          style={{ marginBottom: 16 }}
+        />
+      )}
+      
+      {pokemon && !loading && (
+        <div>
+          <div style={{ textAlign: 'center', marginBottom: 16 }}>
+            <img
+              src={pokemon.sprites.front_default}
+              alt={pokemon.name}
+              style={{ width: 128, height: 128 }}
+            />
           </div>
-        )}
-      </DialogContent>
-    </Dialog>
+          
+          <Descriptions column={1} bordered size="small">
+            <Descriptions.Item label="ID">{pokemon.id}</Descriptions.Item>
+            <Descriptions.Item label="Height">{pokemon.height}</Descriptions.Item>
+            <Descriptions.Item label="Weight">{pokemon.weight}</Descriptions.Item>
+            <Descriptions.Item label="Types">
+              <Space size={[0, 8]} wrap>
+                {pokemon.types.map((type) => (
+                  <Tag key={type.slot} color="blue" style={{ textTransform: 'capitalize' }}>
+                    {type.type.name}
+                  </Tag>
+                ))}
+              </Space>
+            </Descriptions.Item>
+            <Descriptions.Item label="Abilities">
+              <Space size={[0, 8]} wrap>
+                {pokemon.abilities.map((ability, index) => (
+                  <Tag key={index} color="green" style={{ textTransform: 'capitalize' }}>
+                    {ability.ability.name}
+                  </Tag>
+                ))}
+              </Space>
+            </Descriptions.Item>
+          </Descriptions>
+          
+          <p style={{ marginTop: 16, fontSize: 12, color: 'rgba(0, 0, 0, 0.45)' }}>
+            Pokemon Details
+          </p>
+        </div>
+      )}
+    </Modal>
   )
 }
