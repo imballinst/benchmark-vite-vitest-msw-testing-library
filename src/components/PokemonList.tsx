@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Spin, Alert, Row, Col } from 'antd'
 import { PokemonCard } from './PokemonCard'
 import type { PokemonListResponse } from '@/types/pokemon'
 
@@ -30,29 +31,42 @@ export function PokemonList() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-xl">Loading Pokemon...</div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+        <div style={{ textAlign: 'center' }}>
+          <Spin size="large" />
+          <div style={{ fontSize: 20, marginTop: 16 }}>Loading Pokemon...</div>
+        </div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-xl text-red-500">Error: {error}</div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+        <Alert
+          message="Error"
+          description={error}
+          type="error"
+          showIcon
+          style={{ fontSize: 20 }}
+        />
       </div>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">Pokemon List</h1>
+    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 16px' }}>
+      <h1 style={{ fontSize: 36, fontWeight: 'bold', textAlign: 'center', marginBottom: 32 }}>
+        Pokemon List
+      </h1>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <Row gutter={[24, 24]}>
         {pokemonList?.results.map((pokemon) => (
-          <PokemonCard key={pokemon.name} pokemon={pokemon} />
+          <Col key={pokemon.name} xs={24} sm={12} lg={8}>
+            <PokemonCard pokemon={pokemon} />
+          </Col>
         ))}
-      </div>
+      </Row>
     </div>
   )
 }
